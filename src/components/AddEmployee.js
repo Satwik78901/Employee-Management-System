@@ -11,7 +11,7 @@ const AddEmployee = () => {
     e.preventDefault();
     const employee = { firstName, lastName, email };
     EmployeeService.addEmployee(employee)
-      .then((respone) => {
+      .then((response) => {
         navigate('/employees');
       })
       .catch((error) => {
@@ -56,7 +56,7 @@ const AddEmployee = () => {
                   <label className="form-label ">Email:</label>
                   <input
                     type="text"
-                    placeholder="Enter your Email"
+                    placeholder="Enter your Email Id"
                     name="email"
                     className="form-control"
                     value={email}
