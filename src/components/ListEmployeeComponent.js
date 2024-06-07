@@ -6,7 +6,7 @@ const ListEmployeeComponent = () => {
 
   useEffect(() => {
     EmployeeService.getAllEmployees()
-      .then((respone) => {
+      .then((response) => {
         setEmployees(respone.data);
         console.log(respone.data);
       })
