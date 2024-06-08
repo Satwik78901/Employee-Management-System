@@ -1,23 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import EmployeeService from '../services/EmployeeService';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
+
 const AddEmployee = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      EmployeeService.getEmployeeById(id)
+        .then((response) => {
+          setFirstName(response.data.firstName);
+          setLastName(response.data.lastName);
+          setEmail(response.data.email);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [id]);
+
   const saveEmployee = (e) => {
     e.preventDefault();
     const employee = { firstName, lastName, email };
     EmployeeService.addEmployee(employee)
-      .then((response) => {
+      .then(() => {
         navigate('/employees');
       })
       .catch((error) => {
         console.log(error);
       });
   };
+
   return (
     <div>
       <div className="container">
@@ -35,10 +52,8 @@ const AddEmployee = () => {
                     className="form-control"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                  ></input>
+                  />
                 </div>
-              </form>
-              <form>
                 <div className="form-group mb-2">
                   <label className="form-label">Last Name:</label>
                   <input
@@ -48,12 +63,10 @@ const AddEmployee = () => {
                     className="form-control"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                  ></input>
+                  />
                 </div>
-              </form>
-              <form>
                 <div className="form-group mb-2">
-                  <label className="form-label ">Email:</label>
+                  <label className="form-label">Email:</label>
                   <input
                     type="text"
                     placeholder="Enter your Email Id"
@@ -61,13 +74,11 @@ const AddEmployee = () => {
                     className="form-control"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                  ></input>
-                  <br />
-                  <button
-                    className="btn btn-success"
-                    onClick={(e) => saveEmployee(e)}
-                  >
-                    Sumbit
+                  />
+                </div>
+                <div className="form-group mb-2">
+                  <button className="btn btn-success" onClick={saveEmployee}>
+                    Submit
                   </button>
                   <Link to="/employees" className="btn btn-danger">
                     Cancel
@@ -81,4 +92,5 @@ const AddEmployee = () => {
     </div>
   );
 };
+
 export default AddEmployee;
